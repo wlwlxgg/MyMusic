@@ -20,12 +20,14 @@ import com.example.wlwlxgg.mymusic.R;
 import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.CodeMessage;
 import com.example.wlwlxgg.mymusic.constant.PlayStatus;
+import com.example.wlwlxgg.mymusic.constant.PrefsKey;
 import com.example.wlwlxgg.mymusic.entity.MusicLoveEntity;
 import com.example.wlwlxgg.mymusic.greendao.DaoSession;
 import com.example.wlwlxgg.mymusic.http.HttpUtils;
 import com.example.wlwlxgg.mymusic.http.result.MusicInfo;
 import com.example.wlwlxgg.mymusic.service.MusicPlayService;
 import com.example.wlwlxgg.mymusic.utils.CommonUtils;
+import com.example.wlwlxgg.mymusic.utils.PrefsUtil;
 import com.example.wlwlxgg.mymusic.utils.StatusBar;
 
 import java.io.File;
@@ -37,7 +39,21 @@ import me.zhengken.lyricview.LyricView;
  */
 
 public class PlayActivity extends Activity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener,
-        LyricView.OnPlayerClickListener{
+        LyricView.OnPlayerClickListener {
+
+    private LyricView lyricView;
+    private TextView title, author, currentTime, totalTime;
+    private Button play, last, next, pause, download, love;
+    private SeekBar seekBar;
+    private MusicInfo musicInfo;
+    private File lyricFile;
+    private int mProgress;
+    private int musicLength;
+    private String minTotal, secondTotal;
+    private String minCurrent, secondCurrent;
+    private boolean isGetLength;
+    private PrefsUtil prefsUtil;
+
     private MusicPlayService myService;
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -66,18 +82,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
             });
         }
     };
-    private LyricView lyricView;
-    private TextView title, author, currentTime, totalTime;
-    private Button play, last, next, pause, download, love;
-    private SeekBar seekBar;
-    private MusicInfo musicInfo;
-    private File lyricFile;
-    private int mProgress;
-    private int musicLength;
-    private String minTotal, secondTotal;
-    private String minCurrent, secondCurrnet;
-    private boolean isPaused;
-    private boolean isGetLength;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -100,10 +105,10 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
                             minCurrent = "0" + mProgress / 1000 / 60;
                         else minCurrent = mProgress / 1000 / 60 + "";
                         if (mProgress / 1000 % 60 < 10)
-                            secondCurrnet = "0" + mProgress / 1000 % 60;
-                        else secondCurrnet = mProgress / 1000 % 60 + "";
-                        currentTime.setText(minCurrent + ":" + secondCurrnet);
-                        seekBar.setProgress((int)(mProgress / (float)musicLength * 100));
+                            secondCurrent = "0" + mProgress / 1000 % 60;
+                        else secondCurrent = mProgress / 1000 % 60 + "";
+                        currentTime.setText(minCurrent + ":" + secondCurrent);
+                        seekBar.setProgress((int) (mProgress / (float) musicLength * 100));
                     }
                     break;
 
@@ -134,26 +139,31 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
     }
 
     private void initData() {
+        prefsUtil = PrefsUtil.getInstance();
         play.setOnClickListener(this);
         pause.setOnClickListener(this);
         love.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         lyricView.setOnPlayerClickListener(this);
         Intent intent = getIntent();
-        isPaused = false;
-        if (intent.getSerializableExtra("MusicInfo") != null) {
-            musicInfo = (MusicInfo) intent.getSerializableExtra("MusicInfo");
+        if (intent.getSerializableExtra(PrefsKey.MUSIC_INFO) != null) {
+            musicInfo = (MusicInfo) intent.getSerializableExtra(PrefsKey.MUSIC_INFO);
             lyricFile = new File(Environment.getExternalStorageDirectory().toString() + File.separator + "MyMusic/Lrc/" + musicInfo.getSonginfo().getSong_id() + ".lrc");
             if (!lyricFile.exists())
                 HttpUtils.getLyric(musicInfo, mHandler);
             else mHandler.sendEmptyMessage(CodeMessage.NET_SUCCESSFUL);
             title.setText(musicInfo.getSonginfo().getTitle());
             author.setText(musicInfo.getSonginfo().getAuthor());
-            play.setVisibility(View.GONE);
-            pause.setVisibility(View.VISIBLE);
+            if (prefsUtil.getInt(PrefsKey.PLAY_STATUS) == PlayStatus.PLAY || prefsUtil.getInt(PrefsKey.PLAY_STATUS) == PlayStatus.CONTINUE) {
+                play.setVisibility(View.GONE);
+                pause.setVisibility(View.VISIBLE);
+            } else {
+                play.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.GONE);
+            }
+            intent = new Intent(PlayActivity.this, MusicPlayService.class);
+            bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
-        intent = new Intent(PlayActivity.this, MusicPlayService.class);
-        bindService(intent, conn, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -164,7 +174,8 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
 
     @Override
     protected void onDestroy() {
-        unbindService(conn);
+        if (myService != null)
+            unbindService(conn);
         super.onDestroy();
     }
 
@@ -181,7 +192,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (musicLength != 0) {
-            int targetProgress = (int)(seekBar.getProgress() / 100.0 * musicLength);
+            int targetProgress = (int) (seekBar.getProgress() / 100.0 * musicLength);
             myService.mediaPlayer.seekTo(targetProgress);
         }
     }
@@ -199,11 +210,11 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
                 if (musicInfo != null) {
                     play.setVisibility(View.GONE);
                     pause.setVisibility(View.VISIBLE);
-                    if (!isPaused)
-                        intent.putExtra("Msg", PlayStatus.PLAY);
+                    if (!prefsUtil.getBoolean(PrefsKey.IS_PAUSED))
+                        prefsUtil.putInt(PrefsKey.PLAY_STATUS, PlayStatus.PLAY);
                     else
-                        intent.putExtra("Msg", PlayStatus.CONTINUE);
-                    intent.putExtra("MusicInfo", musicInfo);
+                        prefsUtil.putInt(PrefsKey.PLAY_STATUS, PlayStatus.CONTINUE);
+                    intent.putExtra(PrefsKey.MUSIC_INFO, musicInfo);
                     intent.setClass(PlayActivity.this, MusicPlayService.class);
                     startService(intent);
                 }
@@ -212,11 +223,11 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
                 if (musicInfo != null) {
                     pause.setVisibility(View.GONE);
                     play.setVisibility(View.VISIBLE);
-                    intent.putExtra("Msg", PlayStatus.PAUSE);
-                    intent.putExtra("MusicInfo", musicInfo);
+                    prefsUtil.putInt(PrefsKey.PLAY_STATUS, PlayStatus.PAUSE);
+                    intent.putExtra(PrefsKey.MUSIC_INFO, musicInfo);
                     intent.setClass(PlayActivity.this, MusicPlayService.class);
                     startService(intent);
-                    isPaused = true;
+                    prefsUtil.putBoolean(PrefsKey.IS_PAUSED, true);
                 }
                 break;
             case R.id.love:

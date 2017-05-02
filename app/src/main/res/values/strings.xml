@@ -16,4 +16,6 @@
     <string name="dowload_title">下载管理</string>
     <string name="is_download">正在下载</string>
     <string name="has_download">已完成</string>
+    <string name="search_result">搜索结果</string>
+    <string name="search_history">搜索历史</string>
 </resources>

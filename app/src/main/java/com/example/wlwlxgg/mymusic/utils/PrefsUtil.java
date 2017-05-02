@@ -35,6 +35,15 @@ public class PrefsUtil {
         return this;
     }
 
+    public PrefsUtil putBoolean(String key, boolean b) {
+        editor.putBoolean(key, b);
+        editor.commit();
+        return this;
+    }
+    public boolean getBoolean(String key) {
+        return this.prefs.getBoolean(key, false);
+    }
+
     public int getInt(String key) {
         return this.prefs.getInt(key, 0);
     }

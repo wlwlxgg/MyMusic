@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.CodeMessage;
+import com.example.wlwlxgg.mymusic.constant.PrefsKey;
 import com.example.wlwlxgg.mymusic.entity.HistoryEntity;
 import com.example.wlwlxgg.mymusic.greendao.DaoSession;
 import com.example.wlwlxgg.mymusic.greendao.HistoryEntityDao;
@@ -84,7 +85,7 @@ public class HttpUtils {
                     historyEntityDao.insertOrReplaceInTx(historyEntity);
                     /*返回数据到MainActivity*/
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("MusicInfo", musicInfo);
+                    bundle.putSerializable(PrefsKey.MUSIC_INFO, musicInfo);
                     Message message = new Message();
                     message.setData(bundle);
                     message.what = CodeMessage.GET_MUSIC;

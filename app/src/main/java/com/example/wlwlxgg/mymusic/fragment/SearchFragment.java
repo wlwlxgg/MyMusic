@@ -22,11 +22,14 @@ import com.example.wlwlxgg.mymusic.adapter.HistoryAdapter;
 import com.example.wlwlxgg.mymusic.adapter.SearchAdapter;
 import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.CodeMessage;
+import com.example.wlwlxgg.mymusic.constant.PlayStatus;
+import com.example.wlwlxgg.mymusic.constant.PrefsKey;
 import com.example.wlwlxgg.mymusic.entity.HistoryEntity;
 import com.example.wlwlxgg.mymusic.greendao.HistoryEntityDao;
 import com.example.wlwlxgg.mymusic.http.HttpUtils;
 import com.example.wlwlxgg.mymusic.http.result.MusicInfo;
 import com.example.wlwlxgg.mymusic.http.result.SearchResult;
+import com.example.wlwlxgg.mymusic.utils.PrefsUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -64,7 +67,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                     break;
                 case CodeMessage.GET_MUSIC:
                     Bundle bundle = msg.getData();
-                    musicInfo = (MusicInfo) bundle.getSerializable("MusicInfo");
+                    musicInfo = (MusicInfo) bundle.getSerializable(PrefsKey.MUSIC_INFO);
+                    PrefsUtil.getInstance().putInt(PrefsKey.PLAY_STATUS, PlayStatus.PLAY);
                     if (musicGetListener != null) {
                         musicGetListener.onMusicGet(musicInfo);
                     }
@@ -158,12 +162,12 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                     resultList.setVisibility(View.VISIBLE);
                     editTag = false;
                 }
-                history.setText("搜索结果");
+                history.setText(R.string.search_result);
                 cancle.setVisibility(View.VISIBLE);
                 page_num = 1;
                 HttpUtils.getSearchResult(searchResults, edit.getText().toString(), page_num, mHandler);
             }else {
-                history.setText("历史记录");
+                history.setText(R.string.search_history);
                 cancle.setVisibility(View.GONE);
                 searchResults.clear();
                 searchAdapter.notifyDataSetChanged();
