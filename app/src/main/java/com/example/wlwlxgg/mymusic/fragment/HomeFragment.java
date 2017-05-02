@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,13 +25,14 @@ import java.util.ArrayList;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener{
     private ArrayList<Fragment> mFragments;
-    private Button my, recommend, search;
+    private Button my, recommend, search, menu;
     public static ViewPager viewPager;
     public static HomeFragment instance;
     private DrawerLayout drawerLayout;
     private ListView drawerListView;
     private ImageView header;
     private TextView user_name;
+    private LinearLayout drawerView;
 
     public static HomeFragment getInstance(){
         return instance;
@@ -49,8 +51,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         my = (Button) view.findViewById(R.id.my);
         recommend = (Button) view.findViewById(R.id.recommend);
         search = (Button) view.findViewById(R.id.search);
+        menu = (Button) view.findViewById(R.id.menu);
         drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
         drawerListView = (ListView) view.findViewById(R.id.left_drawer);
+        header = (ImageView) view.findViewById(R.id.header);
+        user_name = (TextView) view.findViewById(R.id.user_name);
+        drawerView = (LinearLayout) view.findViewById(R.id.drawer_view);
+
 
         mFragments = new ArrayList<>();
         mFragments.add(new MyFragment());
@@ -61,6 +68,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
         my.setOnClickListener(this);
         recommend.setOnClickListener(this);
         search.setOnClickListener(this);
+        menu.setOnClickListener(this);
     }
 
     private class MyFragmentAdapter extends FragmentPagerAdapter {
@@ -92,6 +100,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.search:
                 setCurrentItem(CodeMessage.FRAGMENT_SEARCH);
+                break;
+            case R.id.menu:
+                drawerLayout.openDrawer(drawerView);
                 break;
         }
     }

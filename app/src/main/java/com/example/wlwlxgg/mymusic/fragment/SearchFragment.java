@@ -99,6 +99,12 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         historyList.setVisibility(View.VISIBLE);
         resultList.setVisibility(View.GONE);
         historyList.setAdapter(historyAdapter);
+        historyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HttpUtils.getMusic(historyEntities.get(position).getSongId(), mHandler);
+            }
+        });
         resultList.setAdapter(searchAdapter);
         cancle.setOnClickListener(this);
         resultList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);

@@ -16,7 +16,7 @@ import com.example.wlwlxgg.mymusic.http.result.MusicInfo;
 public class MusicPlayService extends Service {
 
     public interface OnProgressListener {
-        void onProgress(int progress);
+        void onProgress(int progress, int length);
     }
     /**
      * 注册回调接口的方法，供外部调用
@@ -29,7 +29,7 @@ public class MusicPlayService extends Service {
 
 
 
-    private MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
     private MusicInfo musicInfo;
     private int msg;
     private int progress = 0;
@@ -95,7 +95,7 @@ public class MusicPlayService extends Service {
                 while (mediaPlayer.getDuration()!= mediaPlayer.getCurrentPosition()) {
                     progress = mediaPlayer.getCurrentPosition();
                     if (onProgressListener != null) {
-                        onProgressListener.onProgress(progress);
+                        onProgressListener.onProgress(progress, mediaPlayer.getDuration());
                     }
                     try {
                         Thread.sleep(1000);

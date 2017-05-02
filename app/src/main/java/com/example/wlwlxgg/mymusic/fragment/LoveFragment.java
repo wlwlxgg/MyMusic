@@ -60,7 +60,7 @@ public class LoveFragment extends BaseFragment implements View.OnClickListener{
             case R.id.back:
                 MainActivity activity = (MainActivity)getActivity();
                 activity.setIndex(CodeMessage.FRAGMENT_HOME);
-                HomeFragment.getIstance().setCurrentItem(CodeMessage.FRAGMENT_MY);
+                HomeFragment.getInstance().setCurrentItem(CodeMessage.FRAGMENT_MY);
                 break;
         }
     }
