@@ -63,7 +63,7 @@ public class MusicPlayService extends Service {
         mediaPlayer.reset();
         try {
             mediaPlayer.setDataSource(musicInfo.getBitrate().getFile_link());
-            mediaPlayer.prepare();
+            mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
