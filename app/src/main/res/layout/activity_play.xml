@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="成都"
+        android:textColor="@color/color_text_black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="赵雷"
+        android:textColor="@color/color_text_black"
+        android:textSize="14sp" />
+
+    <me.zhengken.lyricview.LyricView
+        android:id="@+id/custom_lyric_view"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        app:hintColor="@color/color_backgroud_black"
+        app:highlightColor="@color/color_backgroud_black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:max="100"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:scrollbarSize="2dp"
+            android:thumb="@mipmap/seekbar_thumb"
+            android:thumbOffset="-1dp"
+            android:progressDrawable="@drawable/seekbar_drawble"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+
+            <TextView
+                android:id="@+id/currentTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="00:00"/>
+
+            <TextView
+                android:text="03:05"
+                android:gravity="end"
+                android:id="@+id/totalTime"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/love"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/addtolove"/>
+
+        <Button
+            android:id="@+id/last"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="50dp"
+            android:background="@mipmap/playactivy_last" />
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="40dp"
+            android:background="@mipmap/playactivity_play" />
+
+        <Button
+            android:id="@+id/pause"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="40dp"
+            android:background="@mipmap/playactivity_pause"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="40dp"
+            android:background="@mipmap/playactivity_next" />
+        <Button
+            android:id="@+id/download"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="50dp"
+            android:background="@mipmap/playactivity_download" />
+    </LinearLayout>
+
+</RelativeLayout>

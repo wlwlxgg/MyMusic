@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MyMusic</string>
+    <string name="my">我的</string>
+    <string name="recommend">推荐</string>
+    <string name="search">搜索</string>
+    <string name="recommendforyou">为你推荐</string>
+    <string name="more">more</string>
+    <string name="local">本地音乐</string>
+    <string name="history">播放记录</string>
+    <string name="download">下载管理</string>
+    <string name="love">我的收藏</string>
+    <string name="cancle">取消</string>
+    <string name="search_hint">请输入歌曲名称或歌手或专辑</string>
+    <string name="history_search">历史记录</string>
+    <string name="no_content">没有更多数据了</string>
+    <string name="dowload_title">下载管理</string>
+    <string name="is_download">正在下载</string>
+    <string name="has_download">已完成</string>
+</resources>

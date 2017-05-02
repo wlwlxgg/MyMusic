@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.example.wlwlxgg.mymusic"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <FrameLayout
+        android:id="@+id/fl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.wlwlxgg.mymusic.view.MyViewFlow
+            android:id="@+id/viewFlow"
+            android:layout_width="match_parent"
+            android:layout_height="190dp">
+
+        </com.example.wlwlxgg.mymusic.view.MyViewFlow>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#00000000"
+            android:gravity="center"
+            android:padding="3dip">
+
+            <com.example.wlwlxgg.mymusic.view.CircleFlowIndicator
+                android:id="@+id/viewFlowIndic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:padding="2dip"
+                app:activeColor="#ffffff"
+                app:activeType="fill"
+                app:circleSeparation="20dp"
+                app:inactiveColor="#44000000"
+                app:inactiveType="fill"
+                app:radius="3dp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_below="@id/fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/recommend_rl1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_wight_background">
+
+                <TextView
+                    android:id="@+id/recommend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
+                    android:text="@string/recommendforyou"
+                    android:textColor="@color/color_text"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/color_wight_background"
+                    android:text="@string/more"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_text"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <com.example.wlwlxgg.mymusic.view.MyGridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recommend_rl1"
+                android:layout_marginTop="10dp"
+                android:horizontalSpacing="0.0dip"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="0.0dip">
+
+            </com.example.wlwlxgg.mymusic.view.MyGridView>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
