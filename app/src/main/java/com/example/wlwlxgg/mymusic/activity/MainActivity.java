@@ -30,7 +30,8 @@ import com.example.wlwlxgg.mymusic.utils.StatusBar;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SearchFragment.OnMusicGetListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, SearchFragment.OnMusicGetListener,
+        HistoryFragment.OnMusicGetListener, LoveFragment.OnMusicGetListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -111,12 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if (prefsUtil.getInt(PrefsKey.PLAY_STATUS) == PlayStatus.PAUSE) {
-            play.setVisibility(View.VISIBLE);
-            pause.setVisibility(View.GONE);
-        } else {
-            play.setVisibility(View.GONE);
-            pause.setVisibility(View.VISIBLE);
+        if (musicInfo != null) {
+            if (prefsUtil.getInt(PrefsKey.PLAY_STATUS) == PlayStatus.PAUSE) {
+                play.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.GONE);
+            } else {
+                play.setVisibility(View.GONE);
+                pause.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -218,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private BaseFragment _BaseFragment;
+
     @Override
     public void onBackPressed() {
         if (_BaseFragment instanceof HistoryFragment) {

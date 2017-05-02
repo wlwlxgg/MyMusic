@@ -1,8 +1,11 @@
 package com.example.wlwlxgg.mymusic.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -11,8 +14,13 @@ import com.example.wlwlxgg.mymusic.activity.MainActivity;
 import com.example.wlwlxgg.mymusic.adapter.HistoryAdapter;
 import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.CodeMessage;
+import com.example.wlwlxgg.mymusic.constant.PlayStatus;
+import com.example.wlwlxgg.mymusic.constant.PrefsKey;
 import com.example.wlwlxgg.mymusic.entity.HistoryEntity;
 import com.example.wlwlxgg.mymusic.greendao.HistoryEntityDao;
+import com.example.wlwlxgg.mymusic.http.HttpUtils;
+import com.example.wlwlxgg.mymusic.http.result.MusicInfo;
+import com.example.wlwlxgg.mymusic.utils.PrefsUtil;
 
 import java.util.ArrayList;
 
@@ -27,6 +35,23 @@ public class HistoryFragment extends BaseFragment implements View.OnClickListene
     private ArrayList<HistoryEntity> historyList;
     private HistoryEntityDao historyDao;
     private Button back;
+    private MusicInfo musicInfo;
+    private OnMusicGetListener musicGetListener = null;
+    private android.os.Handler mHandler = new android.os.Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CodeMessage.GET_MUSIC:
+                    Bundle bundle = msg.getData();
+                    musicInfo = (MusicInfo) bundle.getSerializable(PrefsKey.MUSIC_INFO);
+                    PrefsUtil.getInstance().putInt(PrefsKey.PLAY_STATUS, PlayStatus.PLAY);
+                    if (musicGetListener != null) {
+                        musicGetListener.onMusicGet(musicInfo);
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public View initView(LayoutInflater inflater) {
@@ -43,8 +68,23 @@ public class HistoryFragment extends BaseFragment implements View.OnClickListene
         adapter = new HistoryAdapter(getActivity(), historyList);
         historyListView.setAdapter(adapter);
         back.setOnClickListener(this);
+        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HttpUtils.getMusicWithoutSaveData(historyList.get(position).getSongId(), mHandler);
+            }
+        });
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            musicGetListener = (HistoryFragment.OnMusicGetListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement Listener");
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -70,5 +110,9 @@ public class HistoryFragment extends BaseFragment implements View.OnClickListene
     public boolean onBackPressed(){
         back.performClick();
         return true;
+    }
+
+    public interface OnMusicGetListener{
+        void onMusicGet(MusicInfo musicInfo);
     }
 }

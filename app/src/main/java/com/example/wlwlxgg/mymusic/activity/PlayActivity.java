@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wlwlxgg.mymusic.R;
 import com.example.wlwlxgg.mymusic.application.MyApplication;
@@ -235,6 +236,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
                     MusicLoveEntity musicLoveEntity = CommonUtils.MusicInfo2MusicLoveEntity(musicInfo);
                     DaoSession daoSession = MyApplication.getInstances().getDaoSession();
                     daoSession.getMusicLoveEntityDao().insertOrReplaceInTx(musicLoveEntity);
+                    Toast.makeText(this, R.string.add_to_love, Toast.LENGTH_SHORT).show();
                 }
         }
     }

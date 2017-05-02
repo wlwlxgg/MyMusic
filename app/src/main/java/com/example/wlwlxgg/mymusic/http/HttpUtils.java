@@ -68,8 +68,9 @@ public class HttpUtils {
         });
     }
 
+
     /**
-     * 通过songId获取歌曲信息
+     * 通过songId获取歌曲信息并存入数据库
      */
     public static void getMusic(String songId, final Handler mHandler) {
         HttpManager.getMusic(URL.USER_AGENT, songId).enqueue(new Callback<MusicInfo>() {
@@ -84,6 +85,31 @@ public class HttpUtils {
                     HistoryEntityDao historyEntityDao = daoSession.getHistoryEntityDao();
                     historyEntityDao.insertOrReplaceInTx(historyEntity);
                     /*返回数据到MainActivity*/
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(PrefsKey.MUSIC_INFO, musicInfo);
+                    Message message = new Message();
+                    message.setData(bundle);
+                    message.what = CodeMessage.GET_MUSIC;
+                    mHandler.sendMessage(message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MusicInfo> call, Throwable t) {
+
+            }
+        });
+    }
+
+    /**
+     * 通过songId获取歌曲信息--不存入数据库
+     */
+    public static void getMusicWithoutSaveData(String songId, final Handler mHandler) {
+        HttpManager.getMusic(URL.USER_AGENT, songId).enqueue(new Callback<MusicInfo>() {
+            @Override
+            public void onResponse(Call<MusicInfo> call, Response<MusicInfo> response) {
+                if (response.body() != null) {
+                    MusicInfo musicInfo = response.body();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(PrefsKey.MUSIC_INFO, musicInfo);
                     Message message = new Message();
@@ -140,30 +166,21 @@ public class HttpUtils {
             file1.mkdir();//如果路径不存在就先创建路径
         }
         File futureStudioIconFile = new File(file1, musicInfo.getSonginfo().getSong_id() + ".lrc");
-
         InputStream inputStream = null;
         OutputStream outputStream = null;
-
         try {
             byte[] fileReader = new byte[4096];
-
             long fileSize = body.contentLength();
             long fileSizeDownloaded = 0;
-
             inputStream = body.byteStream();
             outputStream = new FileOutputStream(futureStudioIconFile);
-
             while (true) {
                 int read = inputStream.read(fileReader);
-
                 if (read == -1) {
                     break;
                 }
-
                 outputStream.write(fileReader, 0, read);
-
                 fileSizeDownloaded += read;
-
                 Log.d("", "file download: " + fileSizeDownloaded + " of " + fileSize);
             }
             inputStream.close();
@@ -172,7 +189,5 @@ public class HttpUtils {
         } catch (IOException e) {
             return false;
         }
-
     }
-
 }
