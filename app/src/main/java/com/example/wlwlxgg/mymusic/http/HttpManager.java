@@ -29,27 +29,18 @@ public class HttpManager {
     }
 
     /**
-     * 文件下载
-     */
-    public static HttpService getService() {
-        return new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(URL.LYRIC_BASE_URL)
-                .build().create(HttpService.class);
-    }
-
-    /**
      * 获取搜索结果的方法
      */
-    public static Call<SearchResult> getSearchResult(String userAgent, HashMap<String, String> queryMap){
-        Call<SearchResult> call = getService(URL.BASE_URL).getSearchResult(userAgent, queryMap);
+    public static Call<SearchResult> getSearchResult(HashMap<String, String> queryMap){
+        Call<SearchResult> call = getService(URL.BASE_URL).getSearchResult(URL.USER_AGENT, queryMap);
         return call;
     }
 
     /**
      * 获取歌曲信息
      */
-    public static Call<MusicInfo> getMusic(String userAgent, String songId) {
-        Call<MusicInfo> call = getService(URL.BASE_URL).getMusic(userAgent, songId);
+    public static Call<MusicInfo> getMusic(String songId) {
+        Call<MusicInfo> call = getService(URL.BASE_URL).getMusic(URL.USER_AGENT, songId);
         return call;
     }
 
@@ -57,7 +48,7 @@ public class HttpManager {
      * 歌词下载
      */
     public static Call<ResponseBody> getLyric(String url) {
-        Call<ResponseBody> call = getService().getLyric(URL.USER_AGENT, url);
+        Call<ResponseBody> call = getService(URL.LYRIC_BASE_URL).getLyric(URL.USER_AGENT, url);
         return call;
     }
 }

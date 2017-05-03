@@ -47,7 +47,7 @@ public class HttpUtils {
         map.put("query", query);
         map.put("page_no", Page_num);
         map.put("page_size", "10");
-        HttpManager.getSearchResult(URL.USER_AGENT, map).enqueue(new Callback<SearchResult>() {
+        HttpManager.getSearchResult(map).enqueue(new Callback<SearchResult>() {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 if (page_num == 1)
@@ -73,7 +73,7 @@ public class HttpUtils {
      * 通过songId获取歌曲信息并存入数据库
      */
     public static void getMusic(String songId, final Handler mHandler) {
-        HttpManager.getMusic(URL.USER_AGENT, songId).enqueue(new Callback<MusicInfo>() {
+        HttpManager.getMusic(songId).enqueue(new Callback<MusicInfo>() {
             @Override
             public void onResponse(Call<MusicInfo> call, Response<MusicInfo> response) {
                 if (response.body() != null) {
@@ -105,7 +105,7 @@ public class HttpUtils {
      * 通过songId获取歌曲信息--不存入数据库
      */
     public static void getMusicWithoutSaveData(String songId, final Handler mHandler) {
-        HttpManager.getMusic(URL.USER_AGENT, songId).enqueue(new Callback<MusicInfo>() {
+        HttpManager.getMusic(songId).enqueue(new Callback<MusicInfo>() {
             @Override
             public void onResponse(Call<MusicInfo> call, Response<MusicInfo> response) {
                 if (response.body() != null) {
