@@ -41,8 +41,8 @@ public class DownloadActivity extends Activity implements View.OnClickListener, 
         list = new ArrayList<>();
         tx_1.setOnClickListener(this);
         tx_2.setOnClickListener(this);
-//        viewPager.addView(is_down_list);
-//        viewPager.addView(has_down_list);
+        viewPager.addView(is_down_list);
+        viewPager.addView(has_down_list);
         viewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setCurrentItem(0);

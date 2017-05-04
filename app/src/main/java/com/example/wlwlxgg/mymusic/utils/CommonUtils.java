@@ -1,6 +1,7 @@
 package com.example.wlwlxgg.mymusic.utils;
 
 import com.example.wlwlxgg.mymusic.entity.HistoryEntity;
+import com.example.wlwlxgg.mymusic.entity.MusicDownloadEntity;
 import com.example.wlwlxgg.mymusic.entity.MusicLoveEntity;
 import com.example.wlwlxgg.mymusic.http.result.MusicInfo;
 
@@ -63,5 +64,20 @@ public class CommonUtils {
         musicInfo.getSonginfo().setLrclink(musicLoveEntity.getLrcLink());
         musicInfo.getBitrate().setFile_link(musicLoveEntity.getFileLink());
         return musicInfo;
+    }
+
+    /** MusicInfo和MusicDownloadEntity转换*/
+
+    public static MusicDownloadEntity MusicInfo2MusicDownloadEntity(MusicInfo musicInfo) {
+        MusicDownloadEntity entity = new MusicDownloadEntity();
+        entity.setSongId(musicInfo.getSonginfo().getSong_id());
+        entity.setAlbum(musicInfo.getSonginfo().getAlbum_title());
+        entity.setAuthor(musicInfo.getSonginfo().getAuthor());
+        entity.setFileLink(musicInfo.getBitrate().getFile_link());
+        entity.setTitle(musicInfo.getSonginfo().getTitle());
+        entity.setImageSmall(musicInfo.getSonginfo().getPic_small());
+        entity.setImageMid(musicInfo.getSonginfo().getPic_big());
+        entity.setImageBig(musicInfo.getSonginfo().getPic_huge());
+        return entity;
     }
 }

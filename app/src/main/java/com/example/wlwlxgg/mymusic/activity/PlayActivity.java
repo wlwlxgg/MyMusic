@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -22,6 +23,7 @@ import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.CodeMessage;
 import com.example.wlwlxgg.mymusic.constant.PlayStatus;
 import com.example.wlwlxgg.mymusic.constant.PrefsKey;
+import com.example.wlwlxgg.mymusic.entity.MusicDownloadEntity;
 import com.example.wlwlxgg.mymusic.entity.MusicLoveEntity;
 import com.example.wlwlxgg.mymusic.greendao.DaoSession;
 import com.example.wlwlxgg.mymusic.http.HttpUtils;
@@ -54,6 +56,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
     private String minCurrent, secondCurrent;
     private boolean isGetLength;
     private PrefsUtil prefsUtil;
+    private DaoSession daoSession = MyApplication.getInstances().getDaoSession();
 
     private MusicPlayService myService;
     ServiceConnection conn = new ServiceConnection() {
@@ -134,6 +137,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
         play = (Button) findViewById(R.id.play);
         pause = (Button) findViewById(R.id.pause);
         love = (Button) findViewById(R.id.love);
+        download = (Button) findViewById(R.id.download);
         currentTime = (TextView) findViewById(R.id.currentTime);
         totalTime = (TextView) findViewById(R.id.totalTime);
         seekBar = (SeekBar) findViewById(R.id.seek_bar);
@@ -144,6 +148,7 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
         play.setOnClickListener(this);
         pause.setOnClickListener(this);
         love.setOnClickListener(this);
+        download.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         lyricView.setOnPlayerClickListener(this);
         Intent intent = getIntent();
@@ -234,9 +239,17 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
             case R.id.love:
                 if (musicInfo != null) {
                     MusicLoveEntity musicLoveEntity = CommonUtils.MusicInfo2MusicLoveEntity(musicInfo);
-                    DaoSession daoSession = MyApplication.getInstances().getDaoSession();
+                    musicLoveEntity.setTime(String.valueOf(System.currentTimeMillis()));
                     daoSession.getMusicLoveEntityDao().insertOrReplaceInTx(musicLoveEntity);
                     Toast.makeText(this, R.string.add_to_love, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.download:
+                if (musicInfo != null) {
+                    MusicDownloadEntity downloadEntity = CommonUtils.MusicInfo2MusicDownloadEntity(musicInfo);
+                    downloadEntity.setTime(String.valueOf(System.currentTimeMillis()));
+                    daoSession.getMusicDownloadEntityDao().insertOrReplaceInTx(downloadEntity);
+                    Toast.makeText(this, R.string.add_to_download, Toast.LENGTH_SHORT).show();
                 }
         }
     }
