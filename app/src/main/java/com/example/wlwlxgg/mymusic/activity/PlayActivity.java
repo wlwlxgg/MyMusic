@@ -247,7 +247,15 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
             case R.id.download:
                 if (musicInfo != null) {
                     MusicDownloadEntity downloadEntity = CommonUtils.MusicInfo2MusicDownloadEntity(musicInfo);
+                    File file1 = new File(Environment.getExternalStorageDirectory().toString() + File.separator + "MyMusic/" + "Music/");//仅创建路径的File对象
+                    if (!file1.exists()) {
+                        file1.mkdir();//如果路径不存在就先创建路径
+                    }
+                    File futureStudioIconFile = new File(file1, musicInfo.getSonginfo().getSong_id() + ".mp3");
+                    downloadEntity.setBaseUrl(CommonUtils.getBaseUrl(musicInfo.getBitrate().getFile_link()));
+                    downloadEntity.setSavePath(futureStudioIconFile.getAbsolutePath());
                     downloadEntity.setTime(String.valueOf(System.currentTimeMillis()));
+                    downloadEntity.setReadLength(0);
                     daoSession.getMusicDownloadEntityDao().insertOrReplaceInTx(downloadEntity);
                     Toast.makeText(this, R.string.add_to_download, Toast.LENGTH_SHORT).show();
                 }

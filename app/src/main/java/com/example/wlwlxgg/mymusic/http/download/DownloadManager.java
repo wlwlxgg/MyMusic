@@ -6,6 +6,7 @@ import com.example.wlwlxgg.mymusic.entity.MusicDownloadEntity;
 import com.example.wlwlxgg.mymusic.greendao.DaoSession;
 import com.example.wlwlxgg.mymusic.greendao.MusicDownloadEntityDao;
 import com.example.wlwlxgg.mymusic.http.HttpService;
+import com.example.wlwlxgg.mymusic.http.URL;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,8 +57,8 @@ public class DownloadManager {
         return INSTANCE;
     }
 
-    public void startDown(final MusicDownloadEntity entity, WeakReference<DownloadProgressOnNextListener> listener) {
-        this.listener = listener;
+    public void startDown(final MusicDownloadEntity entity, DownloadProgressOnNextListener listener) {
+        this.listener = new WeakReference<>(listener);
         if (entity == null || subscriberHashMap == null || listener == null) {
             return;
         }
@@ -77,7 +78,7 @@ public class DownloadManager {
                 .build();
         HttpService service = retrofit.create(HttpService.class);
         String url = entity.getFileLink().substring(entity.getBaseUrl().length());
-        service.downMusic("bytes=" + entity.getReadLength() + "-", url)
+        service.downMusic(URL.USER_AGENT, "bytes=" + entity.getReadLength() + "-", url)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .map(new Func1<ResponseBody, MusicDownloadEntity>() {
@@ -176,3 +177,20 @@ public class DownloadManager {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

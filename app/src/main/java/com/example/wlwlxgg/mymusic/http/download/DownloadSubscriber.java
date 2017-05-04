@@ -21,9 +21,9 @@ public class DownloadSubscriber<T> extends Subscriber<T> implements DownloadProg
     private WeakReference<DownloadProgressOnNextListener> listener;
     private MusicDownloadEntity downloadEntity;
 
-    public DownloadSubscriber(MusicDownloadEntity entity, WeakReference<DownloadProgressOnNextListener> listener) {
+    public DownloadSubscriber(MusicDownloadEntity entity, DownloadProgressOnNextListener listener) {
         this.downloadEntity = entity;
-        this.listener = listener;
+        this.listener = new WeakReference<>(listener);
     }
 
     /**订阅开始时调用*/

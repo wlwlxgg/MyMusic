@@ -24,7 +24,7 @@ import rx.Observable;
 public interface HttpService {
 
     String USER_AGENT = "User-Agent";
-    String RANGE = "Range";
+    String RANGE = "RANGE";
 
     /**
      * 搜索方法
@@ -49,6 +49,5 @@ public interface HttpService {
      */
     @Streaming
     @GET
-    @Headers(URL.USER_AGENT)
-    Observable<ResponseBody> downMusic(@Header(RANGE) String range, @Url String url);
+    Observable<ResponseBody> downMusic(@Header(USER_AGENT) String userAgent, @Header(RANGE) String range, @Url String url);
 }

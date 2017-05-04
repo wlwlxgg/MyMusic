@@ -42,6 +42,7 @@ dependencies {
     compile 'com.github.zhengken:LyricViewDemo:v1.0'
     compile 'com.alibaba:fastjson:1.2.31'
     compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
 }
 
 greendao {
