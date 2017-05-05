@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class IsDownAdapter extends BaseAdapter{
     private ArrayList<MusicDownloadEntity> mList;
+    private MusicDownloadEntity entity;
     private Context mContext;
     private DownloadManager manager;
 
@@ -63,32 +64,39 @@ public class IsDownAdapter extends BaseAdapter{
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        entity = mList.get(position);
         holder.name.setText(mList.get(position).getTitle());
         holder.author.setText(mList.get(position).getAuthor());
         holder.album.setText(mList.get(position).getAlbum());
-        holder.down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.name.setVisibility(View.GONE);
-                holder.pause.setVisibility(View.VISIBLE);
-                manager.startDown(mList.get(position), holder.listener);
-            }
-        });
-        holder.pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.name.setVisibility(View.VISIBLE);
-                holder.pause.setVisibility(View.GONE);
-                manager.pause(mList.get(position), holder.listener);
-            }
-        });
+        holder.setOnclick();
         return convertView;
     }
 
-    public class ViewHolder{
+    public class ViewHolder implements View.OnClickListener{
         TextView name, author, album;
         Button down, pause;
         NumberProgressBar progressBar;
+
+        public void setOnclick() {
+            down.setOnClickListener(this);
+            pause.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.down:
+                    down.setVisibility(View.GONE);
+                    pause.setVisibility(View.VISIBLE);
+                    manager.startDown(entity,listener);
+                    break;
+                case R.id.pause:
+                    down.setVisibility(View.VISIBLE);
+                    pause.setVisibility(View.GONE);
+                    manager.pause(entity);
+                    break;
+            }
+        }
         DownloadProgressOnNextListener<MusicDownloadEntity> listener = new DownloadProgressOnNextListener<MusicDownloadEntity>() {
             @Override
             public void onNext(MusicDownloadEntity entity) {
