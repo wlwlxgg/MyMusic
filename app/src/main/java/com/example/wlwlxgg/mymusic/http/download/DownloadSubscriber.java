@@ -4,10 +4,9 @@ package com.example.wlwlxgg.mymusic.http.download;
 import com.example.wlwlxgg.mymusic.application.MyApplication;
 import com.example.wlwlxgg.mymusic.constant.DownloadStatus;
 import com.example.wlwlxgg.mymusic.entity.MusicDownloadEntity;
-import com.example.wlwlxgg.mymusic.greendao.DaoSession;
+import com.example.wlwlxgg.mymusic.greendao.MusicDownloadEntityDao;
 
 import java.lang.ref.WeakReference;
-import java.util.Observable;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,6 +19,7 @@ public class DownloadSubscriber<T> extends Subscriber<T> implements DownloadProg
 
     private WeakReference<DownloadProgressOnNextListener> listener;
     private MusicDownloadEntity downloadEntity;
+    private MusicDownloadEntityDao dao = MyApplication.getInstances().getDaoSession().getMusicDownloadEntityDao();
 
     public DownloadSubscriber(MusicDownloadEntity entity, DownloadProgressOnNextListener listener) {
         this.downloadEntity = entity;
@@ -33,6 +33,7 @@ public class DownloadSubscriber<T> extends Subscriber<T> implements DownloadProg
             listener.get().onStart();
         }
         downloadEntity.setStatus(DownloadStatus.START);
+        dao.update(downloadEntity);
     }
 
     /**下载完成时调用*/
@@ -42,6 +43,7 @@ public class DownloadSubscriber<T> extends Subscriber<T> implements DownloadProg
             listener.get().onComplete();
         }
         downloadEntity.setStatus(DownloadStatus.FINISH);
+        dao.update(downloadEntity);
     }
 
 
@@ -52,6 +54,7 @@ public class DownloadSubscriber<T> extends Subscriber<T> implements DownloadProg
             listener.get().onError(e);
         }
         downloadEntity.setStatus(DownloadStatus.ERROR);
+        dao.update(downloadEntity);
     }
 
     @Override

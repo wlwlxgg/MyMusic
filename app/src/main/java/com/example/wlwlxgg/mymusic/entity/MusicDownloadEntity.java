@@ -1,15 +1,19 @@
 package com.example.wlwlxgg.mymusic.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+
 
 /**
  * Created by wlwlxgg on 2017/5/4.
  */
 
 @Entity
-public class MusicDownloadEntity {
+public class MusicDownloadEntity implements Parcelable{
     @Id
     private String songId;
     private String time;
@@ -140,6 +144,58 @@ public class MusicDownloadEntity {
     public void setStatus(int status) {
         this.status = status;
     }
-    
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(songId);
+        dest.writeString(time);
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(album);
+        dest.writeString(lrcLink);
+        dest.writeString(fileLink);
+        dest.writeString(imageSmall);
+        dest.writeString(imageMid);
+        dest.writeString(imageBig);
+        dest.writeString(savePath);
+        dest.writeString(baseUrl);
+        dest.writeLong(contentLength);
+        dest.writeLong(readLength);
+        dest.writeInt(status);
+    }
+    protected MusicDownloadEntity(Parcel in) {
+        songId = in.readString();
+        time = in.readString();
+        title = in.readString();
+        author = in.readString();
+        album = in.readString();
+        lrcLink = in.readString();
+        fileLink = in.readString();
+        imageSmall = in.readString();
+        imageMid = in.readString();
+        imageBig = in.readString();
+        savePath = in.readString();
+        baseUrl = in.readString();
+        contentLength = in.readLong();
+        readLength = in.readLong();
+        status = in.readInt();
+    }
+    public static final Creator<MusicDownloadEntity> CREATOR = new Creator<MusicDownloadEntity>() {
+        @Override
+        public MusicDownloadEntity createFromParcel(Parcel in) {
+            return new MusicDownloadEntity(in);
+        }
+
+        @Override
+        public MusicDownloadEntity[] newArray(int size) {
+            return new MusicDownloadEntity[size];
+        }
+    };
+
 
 }

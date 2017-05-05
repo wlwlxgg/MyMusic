@@ -252,12 +252,16 @@ public class PlayActivity extends Activity implements View.OnClickListener, Seek
                         file1.mkdir();//如果路径不存在就先创建路径
                     }
                     File futureStudioIconFile = new File(file1, musicInfo.getSonginfo().getSong_id() + ".mp3");
-                    downloadEntity.setBaseUrl(CommonUtils.getBaseUrl(musicInfo.getBitrate().getFile_link()));
-                    downloadEntity.setSavePath(futureStudioIconFile.getAbsolutePath());
-                    downloadEntity.setTime(String.valueOf(System.currentTimeMillis()));
-                    downloadEntity.setReadLength(0);
-                    daoSession.getMusicDownloadEntityDao().insertOrReplaceInTx(downloadEntity);
-                    Toast.makeText(this, R.string.add_to_download, Toast.LENGTH_SHORT).show();
+                    if (futureStudioIconFile.exists()) {
+                        Toast.makeText(this, R.string.toast_has_down, Toast.LENGTH_SHORT).show();
+                    } else {
+                        downloadEntity.setBaseUrl(CommonUtils.getBaseUrl(musicInfo.getBitrate().getFile_link()));
+                        downloadEntity.setSavePath(futureStudioIconFile.getAbsolutePath());
+                        downloadEntity.setTime(String.valueOf(System.currentTimeMillis()));
+                        downloadEntity.setReadLength(0);
+                        daoSession.getMusicDownloadEntityDao().insertOrReplaceInTx(downloadEntity);
+                        Toast.makeText(this, R.string.add_to_download, Toast.LENGTH_SHORT).show();
+                    }
                 }
         }
     }

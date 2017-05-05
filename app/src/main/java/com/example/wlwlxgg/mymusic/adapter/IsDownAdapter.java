@@ -1,6 +1,7 @@
 package com.example.wlwlxgg.mymusic.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -23,13 +24,14 @@ import java.util.ArrayList;
 
 public class IsDownAdapter extends BaseAdapter{
     private ArrayList<MusicDownloadEntity> mList;
-    private MusicDownloadEntity entity;
     private Context mContext;
     private DownloadManager manager;
+    private Handler mHandler;
 
-    public IsDownAdapter(ArrayList<MusicDownloadEntity> mList, Context mContext) {
+    public IsDownAdapter(Context mContext, ArrayList<MusicDownloadEntity> mList, Handler mHandler) {
         this.mList = mList;
         this.mContext = mContext;
+        this.mHandler = mHandler;
         manager = DownloadManager.getInstance();
     }
 
@@ -64,11 +66,14 @@ public class IsDownAdapter extends BaseAdapter{
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        entity = mList.get(position);
+        holder.entity = mList.get(position);
         holder.name.setText(mList.get(position).getTitle());
         holder.author.setText(mList.get(position).getAuthor());
         holder.album.setText(mList.get(position).getAlbum());
+        holder.progressBar.setMax((int)mList.get(position).getContentLength());
+        holder.progressBar.setProgress((int)mList.get(position).getReadLength());
         holder.setOnclick();
+
         return convertView;
     }
 
@@ -76,6 +81,7 @@ public class IsDownAdapter extends BaseAdapter{
         TextView name, author, album;
         Button down, pause;
         NumberProgressBar progressBar;
+        MusicDownloadEntity entity;
 
         public void setOnclick() {
             down.setOnClickListener(this);
@@ -117,6 +123,14 @@ public class IsDownAdapter extends BaseAdapter{
             public void updateProgress(long readLength, long countLength) {
                 progressBar.setMax((int) countLength);
                 progressBar.setProgress((int) readLength);
+                if (readLength == countLength) {
+                    Message msg = Message.obtain();
+                    msg.what = 1;
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("object", entity);
+                    msg.setData(bundle);
+                    mHandler.sendMessage(msg);
+                }
             }
         };
     }

@@ -9,4 +9,5 @@
     <color name="color_text">#ffffff</color>
     <color name="color_text_black">#000000</color>
     <color name="color_text_grey">#eaeaea</color>
+    <color name="color_cursor">#000000</color>
 </resources>
